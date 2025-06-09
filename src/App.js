@@ -33,7 +33,7 @@ function handleTogglePacked(id) {
       <Logo />
       <Form onAddItem={handleAddItem} />
       <PackingList items={items} onDeleteItem={handleDeleteItem} onTogglePacked={handleTogglePacked} />
-      <Stats />
+      <Stats items={items} />
     </>
   );
 }
@@ -94,9 +94,17 @@ function Item({ item, onDeleteItem, onTogglePacked }) {
   );
 }
 
-function Stats() {
-  return <footer className="stats">
-    <em> you have X items on Your List, and you already packed X (x%)</em>
-  </footer>
+function Stats({ items }) {
+  const totalItems = items.length;
+  const packedItems = items.filter(item => item.packed).length;
+  const packedPercent = totalItems === 0 ? 0 : Math.round((packedItems / totalItems) * 100);
 
+  return (
+    <footer className="stats">
+      <em>
+        You have {totalItems} item{totalItems !== 1 ? 's' : ''} on your list, and you already packed {packedItems} ({packedPercent}%)
+      </em>
+    </footer>
+  );
 }
+

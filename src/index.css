@@ -86,7 +86,7 @@ input {
   flex-direction: column;
   gap: 3.2rem;
   align-items: center;
-  height: 500px;
+  height: 55vh;
 }
 
 .actions button,
@@ -101,7 +101,6 @@ input {
 .list ul {
   list-style: none;
   width: 80%;
-  overflow: scroll;
 
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
