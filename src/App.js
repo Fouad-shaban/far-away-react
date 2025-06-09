@@ -15,11 +15,24 @@ function App() {
     setItems((prevItems) => [...prevItems, item]);
   }
   
+  function handleDeleteItem(id) {
+  setItems((prevItems) => prevItems.filter(item => item.id !== id));
+  
+}
+
+function handleTogglePacked(id) {
+  setItems(prevItems =>
+    prevItems.map(item =>
+      item.id === id ? { ...item, packed: !item.packed } : item
+    )
+  );
+}
+
   return (
     <>
       <Logo />
       <Form onAddItem={handleAddItem} />
-      <PackingList items={items} />
+      <PackingList items={items} onDeleteItem={handleDeleteItem} onTogglePacked={handleTogglePacked} />
       <Stats />
     </>
   );
@@ -41,7 +54,8 @@ function Form({onAddItem}) {
 
     if (!description) return;
 
-    const newItem = {description, quantity, packed: false, id: Date.now()};
+    
+    const newItem = {description, quantity: Number(quantity), packed: false, id: Date.now()};
     console.log(newItem);
 
     onAddItem(newItem);
@@ -58,22 +72,26 @@ function Form({onAddItem}) {
   </form>
 }
 
-function PackingList({ items }) {
-  return <div className="list">
-     <ul>
+function PackingList({ items, onDeleteItem, onTogglePacked }) {
+  return (
+    <div className="list">
+      <ul>
         {items.map((item) => (
-          <Item item={item} key={item.id} />
+          <Item key={item.id} item={item} onDeleteItem={onDeleteItem} onTogglePacked={onTogglePacked} />
         ))}
       </ul>
-
-  </div>;
-
+    </div>
+  );
 }
 
-function Item({ item }) {
-  return <li><span style={item.packed ? { textDecoration: "line-through" } : {}} > {item.quantity} {item.description} </span>
-    <button>❌</button>
-  </li>
+function Item({ item, onDeleteItem, onTogglePacked }) {
+  return (
+    <li style={item.packed ? { textDecoration: "line-through" } : {}} className={` ${item.packed ? "packed" : ""}`}>
+      <input type="checkbox" checked={item.packed} onChange={() => onTogglePacked(item.id)} />
+      <span>{item.quantity} {item.description}</span>
+      <button onClick={() => onDeleteItem(item.id)}>❌</button>
+    </li>
+  );
 }
 
 function Stats() {
